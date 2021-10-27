@@ -37,6 +37,8 @@ while(1):
 
     r = requests.get(url)
     x = r.json()
-    gas = x['average']
-    if gas <= gas:
-        print("Alert! Curent gas is LOW: " + str(x['average']))
+    avg_gas = x['average']
+    if avg_gas <= gas:
+        print("Alert! Current gas is LOW: " + str(x['average']))
+    else:
+        print("Current gas is not below the threshold.")
