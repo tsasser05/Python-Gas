@@ -22,10 +22,9 @@ if os.path.exists(file_name):
 else:
     sys.exit("python-gas:  The config file does not exist.  Exiting.")
 
-
+# Logging
 log_file = os.path.join(log, "python-gas.log")
 
-# Logging
 if os.path.isdir(log):
     logging.basicConfig(filename=log_file, level=logging.INFO,
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
@@ -36,28 +35,17 @@ else:
                         format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     logging.info("Log file created and starting normal operation.")
 
-# Request with EthGasStation API key.
-# You will need to create an account and input key in the string below.
 url = "https://ethgasstation.info/api/ethgasAPI.json?api-key=" + key
 r = requests.get(url)
 
 # Capture the json from request.
 x = r.json()
+
 # Print average gas from the json obs.
 query_result = "Current gas average :" + str(x['average'])
 print(query_result)
 logging.info(query_result)
 
-# TODO
-# Define criteria for which the script will run in the background
-# Every hour? Every 30 minuets? Every 15 minuets?
-# This will help determine if this should run as daemon, a job or
-# be ran via executable.
-# Configure while loop below to accomodate for how this script will be ran.
-
-
-# This is an infinite loop. It will continuously execute in its current form
-# unless configured otherwise.
 while(1):
     time.sleep(delay)
 

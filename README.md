@@ -5,3 +5,4 @@ A Python script that to detect if Ethereum network gas prices are "low" and send
 
 1. Enhance command line options
 2. Fork as a process and log results
+3. Handle signals 
