@@ -2,9 +2,9 @@ import requests
 import pprint
 import toml
 import time
-import os 
+import os
 import logging
-
+import sys
 
 
 # Read the config.toml file and set variables
@@ -27,11 +27,13 @@ log_file = os.path.join(log, "python-gas.log")
 
 # Logging
 if os.path.isdir(log):
-    logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.basicConfig(filename=log_file, level=logging.INFO,
+                        format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     logging.info("Logging directory exists and starting normal operation.")
 else:
     os.mkdir(log)
-    logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.basicConfig(filename=log_file, level=logging.INFO,
+                        format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     logging.info("Log file created and starting normal operation.")
 
 # Request with EthGasStation API key.
@@ -70,4 +72,3 @@ while(1):
         alt_msg = "Current gas is not below the threshold."
         print(alt_msg)
         logging.info(alt_msg)
-
