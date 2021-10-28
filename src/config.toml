@@ -1,3 +1,4 @@
-gas = 650
+gas = 2650
 delay = 5
 key = "mykey"
+log = "/tmp/python-gas"

@@ -2,15 +2,37 @@ import requests
 import pprint
 import toml
 import time
+import os 
+import logging
+
+
 
 # Read the config.toml file and set variables
-f = open("/Users/tom/git/Python-Gas/src/config.toml", "r")
-config_data = toml.load(f)
-f.close()
+file_name = os.path.join(os.getcwd(), "config.toml")
 
-gas = config_data["gas"]
-delay = config_data["delay"]
-key = config_data["key"]
+if os.path.exists(file_name):
+    f = open(file_name, "r")
+    config_data = toml.load(f)
+    f.close()
+    # TBD .. convert to processing function
+    gas = config_data["gas"]
+    delay = config_data["delay"]
+    key = config_data["key"]
+    log = config_data["log"]
+else:
+    sys.exit("python-gas:  The config file does not exist.  Exiting.")
+
+
+log_file = os.path.join(log, "python-gas.log")
+
+# Logging
+if os.path.isdir(log):
+    logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.info("Logging directory exists and starting normal operation.")
+else:
+    os.mkdir(log)
+    logging.basicConfig(filename=log_file, level=logging.INFO, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.info("Log file created and starting normal operation.")
 
 # Request with EthGasStation API key.
 # You will need to create an account and input key in the string below.
@@ -20,7 +42,9 @@ r = requests.get(url)
 # Capture the json from request.
 x = r.json()
 # Print average gas from the json obs.
-print("Current gas average :" + str(x['average']))
+query_result = "Current gas average :" + str(x['average'])
+print(query_result)
+logging.info(query_result)
 
 # TODO
 # Define criteria for which the script will run in the background
@@ -30,7 +54,7 @@ print("Current gas average :" + str(x['average']))
 # Configure while loop below to accomodate for how this script will be ran.
 
 
-# This is an infinite loop. It will continuously execute in it's current form
+# This is an infinite loop. It will continuously execute in its current form
 # unless configured otherwise.
 while(1):
     time.sleep(delay)
@@ -39,6 +63,11 @@ while(1):
     x = r.json()
     avg_gas = x['average']
     if avg_gas <= gas:
-        print("Alert! Current gas is LOW: " + str(x['average']))
+        msg = "Alert! Current gas is LOW: " + str(x['average'])
+        print(msg)
+        logging.info(msg)
     else:
-        print("Current gas is not below the threshold.")
+        alt_msg = "Current gas is not below the threshold."
+        print(alt_msg)
+        logging.info(alt_msg)
+
