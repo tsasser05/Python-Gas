@@ -163,9 +163,6 @@ def main():
 
 
 if __name__ == '__main__':
-
-    # TBD ...  need to put toml file stuff here to remove hardcoded paths.
-
     PIDFILE = '/tmp/python-gas/python-gas.pid'
 
     if len(sys.argv) != 2:
