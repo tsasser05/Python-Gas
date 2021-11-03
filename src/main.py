@@ -9,6 +9,7 @@ import logging
 import sys
 import atexit
 import signal
+from pathlib import Path
 
 
 def summon(pidfile,
@@ -66,20 +67,29 @@ def summon(pidfile,
 
 
 def gas():
-    # Read the config.toml file and set variables
-    file_name = os.path.join(os.getcwd(), "config.toml")
+    # Find the config file and set variables.  ~/.gasrc overrides config.toml.
 
-    if os.path.exists(file_name):
-        f = open(file_name, "r")
-        config_data = toml.load(f)
-        f.close()
-        # TBD .. convert to processing function
-        gas = config_data["gas"]
-        delay = config_data["delay"]
-        key = config_data["key"]
-        log = config_data["log"]
+    home_dir = Path.home()
+    rc_file = str(home_dir) + "/.gasrc"
+
+    if os.path.exists(rc_file):
+        file_name = rc_file
+    elif Path.exists(os.path.join(os.getcwd(), "config.toml")):
+        file_name = os.path.join(os.getcwd(), "config.toml")
     else:
+        # TBD
+        # May not exist the process properly.  Test this.
         sys.exit("python-gas:  The config file does not exist.  Exiting.")
+
+    f = open(file_name, "r")
+    config_data = toml.load(f)
+    f.close()
+
+    # TBD .. convert to processing function
+    gas = config_data["gas"]
+    delay = config_data["delay"]
+    key = config_data["key"]
+    log = config_data["log"]
 
     # Logging
     log_file = os.path.join(log, "python-gas.log")
@@ -132,6 +142,8 @@ def main():
 
 if __name__ == '__main__':
 
+    # TBD ...  need to put toml file stuff here to remove hardcoded paths.
+
     PIDFILE = '/tmp/python-gas/python-gas.pid'
 
     if len(sys.argv) != 2:
@@ -141,8 +153,8 @@ if __name__ == '__main__':
     if sys.argv[1] == 'start':
         try:
             summon(PIDFILE,
-                   stdout='/tmp/python-gas/python-gas-daemon.log',
-                   stderr='/tmp/python-gas/python-gas-daemon-error.log')
+                   stdout='/tmp/python-gas/daemon.log',
+                   stderr='/tmp/python-gas/error.log')
         except RuntimeError as e:
             print(e, file=sys.stderr)
             raise SystemExit(1)
