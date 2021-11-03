@@ -19,7 +19,7 @@ def summon(pidfile,
            stderr='/dev/null'):
 
     if os.path.exists(pidfile):
-        raise RuntimeError("Gas is already running")
+        raise RuntimeError("Python-Gas is already running")
 
     # Fork to detach from parent
     try:
@@ -33,7 +33,7 @@ def summon(pidfile,
     os.umask(0)
     os.setsid()
 
-    # fork again to release session leadership
+    # Fork again to release session leadership
     try:
         if os.fork() > 0:
             raise SystemExit(0)
@@ -66,26 +66,42 @@ def summon(pidfile,
     signal.signal(signal.SIGTERM, sigterm_handler)
 
 
+'''
+gas()
+
+Queries the target URL, parses the results and writes them to the logfile.
+'''
+
+
 def gas():
     # Find the config file and set variables.  ~/.gasrc overrides config.toml.
-
     home_dir = Path.home()
     rc_file = str(home_dir) + "/.gasrc"
 
     if os.path.exists(rc_file):
         file_name = rc_file
+
     elif Path.exists(os.path.join(os.getcwd(), "config.toml")):
         file_name = os.path.join(os.getcwd(), "config.toml")
     else:
-        # TBD
-        # May not exist the process properly.  Test this.
         sys.exit("python-gas:  The config file does not exist.  Exiting.")
 
+    print("The config file used is: {}\n".format(file_name))
     f = open(file_name, "r")
     config_data = toml.load(f)
     f.close()
 
-    # TBD .. convert to processing function
+    tags = ["delay", "gas", "key", "log"]
+
+    for tag in tags:
+        if tag in tags:
+            next
+        else:
+            sys.stdout.write(
+                'Tag {} was not found in the config data.  Check config file to verify all tags are configured.'.format(tag))
+
+    # TBD .. probably need some defaults to get around missing variables in the config file
+    # TBD .. figure out how to dynamically create the variable from the tag in the loop above
     gas = config_data["gas"]
     delay = config_data["delay"]
     key = config_data["key"]
@@ -112,7 +128,6 @@ def gas():
 
     # Print average gas from the json obs.
     query_result = "Current gas average :" + str(x['average'])
-    # print(query_result)
     logging.info(query_result)
 
     while(1):
@@ -123,11 +138,9 @@ def gas():
 
         if avg_gas <= gas:
             msg = "Alert! Current gas is LOW: " + str(x['average'])
-            # print(msg)
             logging.info(msg)
         else:
             alt_msg = "Current gas is not below the threshold."
-            # print(alt_msg)
             logging.info(alt_msg)
 
 
@@ -135,8 +148,6 @@ def main():
     import time
     sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
     while True:
-        #sys.stdout.write('Daemon alive! {}\n'.format(time.ctime()))
-        # time.sleep(1)
         gas()
 
 
