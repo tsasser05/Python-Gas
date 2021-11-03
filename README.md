@@ -16,10 +16,10 @@ its current directory.
 
 Four items are required:
 
-delay = Number of seconds between runs.
-gas = Threshold for alert.
-key = User private key.
-log = Log directory.  Please keep at in /tmp/python-gas for now.
+* delay = Number of seconds between runs.
+* gas = Threshold for alert.
+* key = User private key.
+* log = Log directory.  Please keep at in /tmp/python-gas for now.
 
 ### Example
 
