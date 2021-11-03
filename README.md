@@ -11,7 +11,10 @@ git clone the repository into a directory.
 
 ## Config
 The configuration is controlled by $HOME/.gasrc.  This should be preferred since the user's private access
-key will be stored here.  Format is TOML.  Four items are required:
+key will be stored here.  Format is TOML.  If .gasrc does not exist, the program will look for "config.toml" in
+its current directory.
+
+Four items are required:
 
 delay = Number of seconds between runs.
 gas = Threshold for alert.
