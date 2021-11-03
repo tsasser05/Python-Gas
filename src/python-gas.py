@@ -70,6 +70,17 @@ def summon(pidfile,
 gas()
 
 Queries the target URL, parses the results and writes them to the logfile.
+
+The configuration is stored in either ~/.gasrc or the local working directory as config.toml.
+Format is TOML.  Four lines are required:
+
+"delay = Number of seconds between runs
+"gas" = Average gas threshold
+"key" = Private user key from the target URL
+"log" = Logging directory.  Default should be /tmp/python-gas/
+
+I am debating about whether or not to have this send email.  It may be better to integrate this into telegram.
+
 '''
 
 
